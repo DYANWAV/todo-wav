@@ -54,7 +54,12 @@ export const TaskDetails = () => {
         'm-auto backdrop:bg-black/50 backdrop:backdrop-blur-xs bg-transparent max-w-sm w-[calc(100%-2rem)]',
       )}
     >
-      <form method="dialog">
+      <form
+        method="dialog"
+        onSubmit={e => {
+          e.preventDefault()
+        }}
+      >
         <Card>
           <CardHeader className={cn('border-b gap-0')}>
             <CardAction onClick={() => closeDialog()}>
