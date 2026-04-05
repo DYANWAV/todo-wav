@@ -1,6 +1,9 @@
 import { isValidDate } from './is-valid-date'
 
-export function formatDate(date: Date | string | undefined) {
+export function formatDate(
+  date: Date | string | undefined,
+  month: Intl.DateTimeFormatOptions['month'] = 'short',
+) {
   if (!date) {
     return ''
   }
@@ -13,7 +16,7 @@ export function formatDate(date: Date | string | undefined) {
 
   return dateObj.toLocaleDateString('es-ES', {
     day: '2-digit',
-    month: 'short',
+    month: month,
     year: 'numeric',
   })
 }

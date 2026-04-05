@@ -1,8 +1,9 @@
 import { formatDate } from '@/lib/format-date'
 import { cn } from '@/lib/utils'
-import type { Task } from '@/store/task-store'
+import { type Task } from '@/store/task-store'
 import { Calendar, EllipsisVertical, Eye, Pencil, Trash } from 'lucide-react'
 
+import { Link } from 'react-router'
 import { Badge } from './ui/badge'
 import { Button } from './ui/button'
 import {
@@ -27,11 +28,13 @@ export const TaskItem = ({ task }: Props) => {
   return (
     <Item className={cn('flex')} variant={'outline'}>
       <ItemContent className={cn('gap-1 flex-1 min-w-0')}>
-        <a href="">
+        {/* <a href=""> */}
+        <Link to={`/task/${task.id}`} unstable_mask={`/task/${task.id}`}>
           <ItemTitle className={cn('truncate text-base')}>
             {task.title}
           </ItemTitle>
-        </a>
+        </Link>
+        {/* </a> */}
 
         {task.description && (
           <ItemDescription className={cn('truncate')}>

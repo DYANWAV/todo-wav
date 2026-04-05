@@ -17,11 +17,12 @@ interface TaskState {
 
 interface TaskActions {
   addTask: (task: Omit<Task, 'id' | 'position' | 'completed'>) => void
+  getTaskById: (id: string | undefined) => Task | undefined
 }
 
 export const useTaskStore = create<TaskState & TaskActions>()(
   persist(
-    set => ({
+    (set, get) => ({
       tasks: [],
       tasksCount: 0,
       addTask: task => {
@@ -37,6 +38,13 @@ export const useTaskStore = create<TaskState & TaskActions>()(
           ],
           tasksCount: state.tasksCount + 1,
         }))
+      },
+      getTaskById: id => {
+        if (!id) return undefined
+
+        const task = get().tasks.find(task => task.id === id)
+
+        return task
       },
     }),
     {
