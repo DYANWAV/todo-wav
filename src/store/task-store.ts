@@ -17,6 +17,8 @@ interface TaskState {
 
 interface TaskActions {
   addTask: (task: Omit<Task, 'id' | 'position' | 'completed'>) => void
+  editTask: (id: Pick<Task, 'id'>['id'], task: Partial<Task>) => void
+  deleteTask: (id: Pick<Task, 'id'>['id']) => void
   getTaskById: (id: string | undefined) => Task | undefined
 }
 
@@ -45,6 +47,37 @@ export const useTaskStore = create<TaskState & TaskActions>()(
         const task = get().tasks.find(task => task.id === id)
 
         return task
+      },
+
+      deleteTask: id => {
+        const index = get().tasks.findIndex(task => task.id === id)
+
+        if (index === -1) return
+
+        const newTasks = get().tasks
+
+        newTasks.splice(index, 1)
+
+        set(state => ({
+          tasks: [...newTasks],
+          tasksCount: state.tasksCount - 1,
+        }))
+      },
+      editTask: (id, task) => {
+        const index = get().tasks.findIndex(task => task.id === id)
+
+        if (index === -1) return
+
+        const newTasks = get().tasks
+
+        newTasks[index] = {
+          ...newTasks[index],
+          ...task,
+        }
+
+        set(() => ({
+          tasks: [...newTasks],
+        }))
       },
     }),
     {
