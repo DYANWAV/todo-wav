@@ -17,6 +17,5 @@ export function formatDate(
   return dateObj.toLocaleDateString('es-ES', {
     day: '2-digit',
     month: month,
-    year: 'numeric',
   })
 }
