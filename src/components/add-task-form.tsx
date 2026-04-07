@@ -1,5 +1,3 @@
-import { formatDate } from '@/lib/format-date'
-import { isValidDate } from '@/lib/is-valid-date'
 import { cn } from '@/lib/utils'
 import { useTaskStore, type Task } from '@/store/task-store'
 import { Plus } from 'lucide-react'
@@ -26,8 +24,8 @@ export const AddTaskForm = () => {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [date, setDate] = useState<Date | undefined>()
-  const [value, setValue] = useState(formatDate(date))
   const dialogRef = useRef<HTMLDialogElement>(null)
+  const titleInputRef = useRef<HTMLInputElement>(null)
   const addTask = useTaskStore(x => x.addTask)
 
   const onSubmit = (e: SubmitEvent<HTMLFormElement>) => {
@@ -52,7 +50,6 @@ export const AddTaskForm = () => {
     setTitle('')
     setDescription('')
     setDate(undefined)
-    setValue('')
   }
 
   const onCancelAddTask = () => {
@@ -68,20 +65,8 @@ export const AddTaskForm = () => {
     resetForm()
   }
 
-  const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const date = new Date(e.target.value)
-    setValue(e.target.value)
-    console.log({ date, isValidDate: isValidDate(date) })
-    console.log({ isValidDate: isValidDate(date) })
-
-    if (isValidDate(date)) {
-      setDate(date)
-    }
-  }
-
   const onChangeDate = (date: Date | undefined) => {
     setDate(date)
-    setValue(formatDate(date))
   }
 
   return (
@@ -89,7 +74,7 @@ export const AddTaskForm = () => {
       <form
         onSubmit={onSubmit}
         className={cn(
-          'flex flex-col max-w-96 mx-auto overflow-hidden',
+          'flex flex-col w-96 max-w-full mx-auto overflow-hidden',
           'border rounded-lg',
           open && 'h-auto',
         )}
@@ -102,6 +87,7 @@ export const AddTaskForm = () => {
           )}
         >
           <InputGroupInput
+            ref={titleInputRef}
             value={title}
             onChange={e => setTitle(e.target.value)}
             placeholder="Qué quieres hacer hoy?"
@@ -115,8 +101,13 @@ export const AddTaskForm = () => {
               variant={'secondary'}
               className={cn('rounded-full')}
               onClick={() => {
-                if (!open) setOpen(true)
-                else onCancelAddTask()
+                if (!open) {
+                  setOpen(true)
+                  titleInputRef.current?.focus()
+                  return
+                }
+
+                onCancelAddTask()
               }}
             >
               <Plus
@@ -133,9 +124,8 @@ export const AddTaskForm = () => {
           className={cn(
             'flex flex-col gap-2',
             'transition-all duration-300 ease-in-out px-2 opacity-0',
-            open && 'border-t py-2 opacity-100',
             'h-0 overflow-hidden [interpolate-size:allow-keywords]',
-            open && 'h-auto',
+            open && 'h-auto border-t py-2 opacity-100',
           )}
         >
           <div className={cn('flex gap-4')}>
@@ -155,12 +145,7 @@ export const AddTaskForm = () => {
           </div>
 
           <div className={cn('flex justify-between gap-2')}>
-            <DatePickerInput
-              value={value}
-              onChangeValue={onChangeValue}
-              date={date}
-              onChangeDate={onChangeDate}
-            />
+            <DatePickerInput date={date} onChangeDate={onChangeDate} />
 
             <div className={cn('flex gap-2 self-end')}>
               <Button

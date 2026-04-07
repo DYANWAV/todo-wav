@@ -1,9 +1,9 @@
-import { formatDate } from '@/lib/format-date'
 import { cn } from '@/lib/utils'
 import { useTaskStore } from '@/store/task-store'
-import { Calendar, X } from 'lucide-react'
+import { X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router'
+import { DatePickerInput } from './date-picker'
 import { Button } from './ui/button'
 import {
   Card,
@@ -29,26 +29,32 @@ export const TaskDetails = () => {
   const [editDueDate, setEditDueDate] = useState(task?.dueDate)
 
   const dialogRef = useRef<HTMLDialogElement>(null)
+  const [dialogNode, setDialogNode] = useState<HTMLElement | null>(null)
   const navigate = useNavigate()
 
-  const closeDialog = () => {
+  const onClose = () => {
     navigate(-1)
   }
 
-  useEffect(() => {
-    console.log(task?.dueDate)
+  const closeDialog = () => dialogRef.current?.close()
 
+  const onChangeDate = (date: Date | undefined) => {
+    setEditDueDate(date)
+  }
+
+  useEffect(() => {
     if (dialogRef.current && !dialogRef.current.open) {
       dialogRef.current.showModal()
+      setDialogNode(dialogRef.current)
     }
-  }, [task?.dueDate])
+  }, [])
 
   if (!task) return null
 
   return (
     <dialog
       ref={dialogRef}
-      onClose={() => closeDialog()}
+      onClose={onClose}
       closedby="any"
       className={cn(
         'm-auto backdrop:bg-black/50 backdrop:backdrop-blur-xs bg-transparent max-w-sm w-[calc(100%-2rem)]',
@@ -56,13 +62,21 @@ export const TaskDetails = () => {
     >
       <form
         method="dialog"
-        onSubmit={e => {
-          e.preventDefault()
+        onSubmit={() => {
+          // e.preventDefault()
+
+          if (editTitle?.trim().length === 0) return
+
+          editTask(task.id, {
+            title: editTitle?.trim(),
+            description: editDescription?.trim(),
+            dueDate: editDueDate,
+          })
         }}
       >
         <Card>
-          <CardHeader className={cn('border-b gap-0')}>
-            <CardAction onClick={() => closeDialog()}>
+          <CardHeader className={cn('border- gap-0')}>
+            <CardAction onClick={closeDialog}>
               <Button
                 variant={'ghost'}
                 size={'icon'}
@@ -100,20 +114,18 @@ export const TaskDetails = () => {
               />
             </Field>
 
-            {task.dueDate && (
-              <Button
-                type="button"
-                variant={'ghost'}
-                className={cn('self-start')}
-              >
-                <Calendar />
-                {formatDate(task?.dueDate, 'long')}
-              </Button>
-            )}
+            <DatePickerInput
+              container={dialogNode}
+              className={cn('z-auto')}
+              date={editDueDate}
+              onChangeDate={onChangeDate}
+            />
           </CardContent>
 
           <CardFooter className={cn('flex justify-end gap-2')}>
-            <Button variant={'outline'}>Cancelar</Button>
+            <Button variant={'outline'} type="button" onClick={closeDialog}>
+              Cancelar
+            </Button>
 
             <Button
               className={cn('justify-self-end')}
@@ -123,11 +135,14 @@ export const TaskDetails = () => {
                   description: editDescription,
                   dueDate: editDueDate,
                 })
+
+                // closeDialog()
               }}
               disabled={
-                task?.title === editTitle &&
-                task?.description === editDescription &&
-                task?.dueDate === editDueDate
+                (task?.title === editTitle &&
+                  task?.description === editDescription &&
+                  task?.dueDate === editDueDate) ||
+                editTitle?.length === 0
               }
             >
               Guardar
