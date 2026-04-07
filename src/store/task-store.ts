@@ -5,7 +5,7 @@ export interface Task {
   id: `${string}-${string}-${string}-${string}-${string}`
   title: string
   description: string
-  dueDate: Date | string | undefined
+  dueDate: Date | undefined
   completed: boolean
   position: number
 }
@@ -18,6 +18,7 @@ interface TaskState {
 interface TaskActions {
   addTask: (task: Omit<Task, 'id' | 'position' | 'completed'>) => void
   editTask: (id: Pick<Task, 'id'>['id'], task: Partial<Task>) => void
+  toggleCompleted: (id: Pick<Task, 'id'>['id']) => void
   deleteTask: (id: Pick<Task, 'id'>['id']) => void
   getTaskById: (id: string | undefined) => Task | undefined
 }
@@ -74,6 +75,18 @@ export const useTaskStore = create<TaskState & TaskActions>()(
           ...newTasks[index],
           ...task,
         }
+
+        set(() => ({
+          tasks: [...newTasks],
+        }))
+      },
+      toggleCompleted: id => {
+        const index = get().tasks.findIndex(task => task.id === id)
+        if (index === -1) return
+
+        const newTasks = get().tasks
+
+        newTasks[index].completed = !newTasks[index].completed
 
         set(() => ({
           tasks: [...newTasks],
