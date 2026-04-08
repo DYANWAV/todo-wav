@@ -12,9 +12,9 @@ import {
 
 import { useState } from 'react'
 import { Link } from 'react-router'
+import { CheckboxWav } from './checkbox-wav'
 import { Badge } from './ui/badge'
 import { Button } from './ui/button'
-import { Checkbox } from './ui/checkbox'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -55,10 +55,14 @@ export const TaskItem = ({ task }: Props) => {
       variant={'outline'}
     >
       <ItemMedia>
-        <Checkbox
+        <CheckboxWav
           checked={task.completed}
           onCheckedChange={() => toggleCompleted(task.id)}
-          className={cn('size-5', 'rounded-full', '')}
+          className={cn(
+            'size-5 [&_svg]:transition-colors',
+            '[&_svg]:stroke-transparent hover:[&_svg]:stroke-accent-foreground/40',
+            'data-checked:[&_svg]:stroke-accent hover:data-checked:[&_svg]:stroke-accent',
+          )}
         />
       </ItemMedia>
 
