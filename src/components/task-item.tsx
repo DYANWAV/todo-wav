@@ -45,10 +45,12 @@ export const TaskItem = ({ task }: Props) => {
 
   return (
     <Item
+      tabIndex={0}
       className={cn(
-        'flex transition-colors',
-        'hover:border-card-foreground/40',
-        'hover:shadow',
+        'group flex transition-colors',
+        'hover:border-card-foreground/40 hover:shadow',
+        'focus-visible:border-card-foreground/40 focus-visible:shadow focus-visible:ring-0',
+        'has-focus-visible:border-card-foreground/40 has-focus-visible:shadow',
       )}
       variant={'outline'}
     >
@@ -85,14 +87,26 @@ export const TaskItem = ({ task }: Props) => {
         variant={'ghost'}
         size={'icon'}
         onClick={() => onTaskOpen()}
-        className={cn('self-start rounded-full')}
+        className={cn(
+          'self-start rounded-full',
+          'opacity-0 group-hover:opacity-100 transition-opacity',
+          'group-focus-visible:opacity-100',
+          'group-has-focus-visible:opacity-100',
+        )}
       >
         <ChevronDown className={cn(open && 'rotate-180', 'transition')} />
       </Button>
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <ItemActions className={cn('self-start')}>
+          <ItemActions
+            className={cn(
+              'self-start',
+              'opacity-0 group-hover:opacity-100 transition-opacity',
+              'group-focus-visible:opacity-100',
+              'group-has-focus-visible:opacity-100',
+            )}
+          >
             <Button variant="ghost" size="icon">
               <EllipsisVertical />
             </Button>
