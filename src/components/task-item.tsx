@@ -44,7 +44,14 @@ export const TaskItem = ({ task }: Props) => {
   }
 
   return (
-    <Item className={cn('flex')} variant={'outline'}>
+    <Item
+      className={cn(
+        'flex transition-colors',
+        'hover:border-card-foreground/40',
+        'hover:shadow',
+      )}
+      variant={'outline'}
+    >
       <ItemMedia>
         <Checkbox
           checked={task.completed}
