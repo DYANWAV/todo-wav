@@ -30,7 +30,7 @@ export function DatePickerInput({ date, onChangeDate, container }: Props) {
           variant="outline"
           aria-label="Select date"
           className={cn(
-            'justify-start items-center',
+            'justify-start items-center w-fit',
             !date && 'text-muted-foreground',
           )}
         >

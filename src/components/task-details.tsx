@@ -63,8 +63,6 @@ export const TaskDetails = () => {
       <form
         method="dialog"
         onSubmit={() => {
-          // e.preventDefault()
-
           if (editTitle?.trim().length === 0) return
 
           editTask(task.id, {
@@ -88,7 +86,7 @@ export const TaskDetails = () => {
             <CardTitle className={cn('group-data-[size=sm]/card:text-lg')}>
               <Input
                 className={cn(
-                  'py-0 border-transparent md:text-base',
+                  'py-0 border-transparent dark:bg-transparent md:text-base',
                   'w-full text-xl',
                   'focus-visible:ring-0',
                 )}
@@ -100,7 +98,12 @@ export const TaskDetails = () => {
 
           <CardContent className={cn('flex flex-col gap-3')}>
             <Field>
-              <FieldLabel htmlFor="description">Descripción</FieldLabel>
+              <FieldLabel
+                htmlFor="description"
+                className={cn('text-chart-3 dark:text-chart-2')}
+              >
+                Descripción
+              </FieldLabel>
 
               <Textarea
                 id="description"
@@ -109,15 +112,15 @@ export const TaskDetails = () => {
                 placeholder="Añade una descripción (opcional)..."
                 className={cn(
                   'max-h-75 resize-none',
-                  ' focus-visible:ring-transparent',
+                  'focus-visible:ring-transparent dark:bg-transparent',
                 )}
               />
             </Field>
 
             <DatePickerInput
               container={dialogNode}
-              className={cn('z-auto')}
               date={editDueDate}
+              className={cn('w-fit')}
               onChangeDate={onChangeDate}
             />
           </CardContent>
@@ -135,8 +138,6 @@ export const TaskDetails = () => {
                   description: editDescription,
                   dueDate: editDueDate,
                 })
-
-                // closeDialog()
               }}
               disabled={
                 (task?.title === editTitle &&

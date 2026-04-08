@@ -84,6 +84,7 @@ export const AddTaskForm = () => {
             'p-1 h-fit border-transparent',
             'has-[[data-slot=input-group-control]:focus-visible]:ring-0 has-[[data-slot=input-group-control]:focus-visible]:border-transparent',
             'text-base',
+            'dark:bg-transparent',
           )}
         >
           <InputGroupInput
@@ -91,7 +92,7 @@ export const AddTaskForm = () => {
             value={title}
             onChange={e => setTitle(e.target.value)}
             placeholder="Qué quieres hacer hoy?"
-            className={cn('pr-1')}
+            className={cn('pr-1', 'dark:bg-transparent')}
             onFocus={() => setOpen(true)}
           />
 
@@ -133,6 +134,7 @@ export const AddTaskForm = () => {
               className={cn(
                 'border-transparent',
                 'has-[[data-slot=input-group-control]:focus-visible]:ring-0 has-[[data-slot=input-group-control]:focus-visible]:border-transparent',
+                'dark:bg-transparent',
               )}
             >
               <InputGroupTextarea
