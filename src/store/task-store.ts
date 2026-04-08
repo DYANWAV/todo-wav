@@ -10,9 +10,12 @@ export interface Task {
   position: number
 }
 
+export type Filter = 'all' | 'pending' | 'completed'
+
 interface TaskState {
   tasks: Task[]
   tasksCount: number
+  filter: Filter
 }
 
 interface TaskActions {
@@ -21,6 +24,7 @@ interface TaskActions {
   toggleCompleted: (id: Pick<Task, 'id'>['id']) => void
   deleteTask: (id: Pick<Task, 'id'>['id']) => void
   getTaskById: (id: string | undefined) => Task | undefined
+  setFilter: (filter: Filter) => void
 }
 
 export const useTaskStore = create<TaskState & TaskActions>()(
@@ -28,6 +32,7 @@ export const useTaskStore = create<TaskState & TaskActions>()(
     (set, get) => ({
       tasks: [],
       tasksCount: 0,
+      filter: 'all',
       addTask: task => {
         set(state => ({
           tasks: [
@@ -91,6 +96,9 @@ export const useTaskStore = create<TaskState & TaskActions>()(
         set(() => ({
           tasks: [...newTasks],
         }))
+      },
+      setFilter: filter => {
+        set({ filter })
       },
     }),
     {
